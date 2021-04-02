@@ -2,6 +2,7 @@ import os
 import glob
 import numpy as np
 import cv2
+import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 
 
@@ -14,11 +15,16 @@ def load_train(train_path, image_size, classes):
     print('Reading training images')
     for fld in classes:  # assuming data directory has a separate folder for each class, and that each folder is named after the class
         index = classes.index(fld)
+        path = os.path.join(train_path, fld)
+        print(path)
         print('Loading {} files (Index: {})'.format(fld, index))
-        path = os.path.join(train_path, fld, '*g')
-        files = glob.glob(path)
+        # os.chdir(path)
+        files = [os.path.join(path, img) for img in os.listdir(path)]
+        # print(files[1:5])
         for fl in files:
-            image = cv2.imread(fl)
+            # print(fl)
+            image = plt.imread(fl)
+            # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             image = cv2.resize(image, (image_size, image_size), cv2.INTER_LINEAR)
             images.append(image)
             label = np.zeros(len(classes))
@@ -38,7 +44,7 @@ def load_train(train_path, image_size, classes):
 def load_test(test_path, image_size):
     path = os.path.join(test_path, '*g')
     files = sorted(glob.glob(path))
-
+    # files = sorted(glob.glob(test_path))
     X_test = []
     X_test_id = []
     print("Reading test images")
